@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ category }} Projects</title>
+</head>
+<body>
+{% if category == 'games' %}
+<h2>Game Projects</h2><hr>
+{% else %}
+<h2>{{ category.title() }} Projects</h2><hr>
+{% endif %}
+{% if all_projs != [] %}
+{% for project in all_projs %}
+{% if category == 'ml' %}
+<a href="{{ url_for( 'ml_projects' , index=project.id) }}">{{ project.title }}</a><br>
+{% elif category == 'web' %}
+<a href="{{ url_for( 'web_projects' , index=project.id) }}">{{ project.title }}</a><br>
+{% else %}
+<a href="{{ url_for( 'game_projects' , index=project.id) }}">{{ project.title }}</a><br>
+{% endif %}
+{% endfor %}
+{% else %}
+<p>No Projects found</p>
+{% endif %}
+</body>
+</html>

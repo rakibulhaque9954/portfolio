@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <style>
+        body {
+            background-color: #f7f7f7;
+        }
+        .card {
+            margin-bottom: 20px;
+        }
+        .centered-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <div class="container centered-content">
+        <div class="col-lg-6">
+            <!-- Home -->
+               <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <ul class="list-unstyled mb-0">
+                                <li><a href="{{ url_for('home') }}">Home</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Search widget -->
+            <div class="card mb-4">
+                <div class="card-header">Search</div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('search') }}">
+                        <div class="input-group">
+                            <input class="form-control" name="searchTerm" type="text" placeholder="enter project name..." aria-label="Enter search term..." aria-describedby="button-search" id="searchInput">
+                            <button class="btn btn-primary" id="button-search" type="submit">Go!</button>
+                        </div>
+                    </form>
+                    <!-- Add a div to display the search suggestions -->
+                    <div id="searchSuggestions"></div>
+                     {% for item in results %}
+                            <a class="dropdown-item" href="#" onclick="handleSuggestionClick(this)" data-title="{{ item.title }}">{{ item.title }}</a>
+                        {% endfor %}
+                </div>
+            </div>
+
+            <!-- Categories widget -->
+            <div class="card mb-4">
+                <div class="card-header">Categories</div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <ul class="list-unstyled mb-0">
+                                <li><a href="{{ url_for('all_projects', catg='ml') }}">Machine Learning</a></li>
+                                <li><a href="{{ url_for('all_projects', catg='games') }}">Games</a></li>
+                                <li><a href="{{ url_for('all_projects', catg='web') }}">Web-design</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Project -->
+            <div class="card mb-4">
+                <div class="card-header">Add Project</div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <ul class="list-unstyled mb-0">
+                                <li><a href="{{ url_for('new_project') }}">Add</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- logout -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <ul class="list-unstyled mb-0">
+                                <li><a href="{{ url_for('logout') }}">Log out</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+<script>
+    let timeoutId;
+
+    // Function to make AJAX request for search suggestions
+    function getSearchSuggestions() {
+        const searchTerm = document.getElementById('searchInput').value;
+        if (searchTerm.length === 0) {
+            // Clear the suggestions if the search input is empty
+            document.getElementById('searchSuggestions').innerHTML = '';
+            return;
+        }
+
+        // Use a timeout to wait for the user to finish typing before making the request
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+            fetch('/get-suggestions', {
+                method: 'POST',
+                body: JSON.stringify({ 'searchTerm': searchTerm }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display the search suggestions in the dropdown menu
+                const suggestionsDiv = document.getElementById('searchSuggestions');
+                suggestionsDiv.innerHTML = ''; // Clear previous suggestions
+                data.forEach(item => {
+                    const suggestion = document.createElement('a');
+                    suggestion.classList.add('dropdown-item');
+                    suggestion.href = '#'; // Leave it as '#' since the href will be handled by JavaScript
+                    suggestion.innerText = item.title;
+                    // Set the data-title attribute with the item title
+                    suggestion.setAttribute('data-title', item.title);
+                    suggestionsDiv.appendChild(suggestion);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching search suggestions:', error);
+            });
+        }, 300); // Wait for 300 milliseconds before making the request
+    }
+
+    // Function to handle search suggestion clicks
+    function handleSuggestionClick(element) {
+        const title = element.getAttribute('data-title');
+
+        // Set the search input value with the clicked title
+        document.getElementById('searchInput').value = title;
+
+        // Clear the suggestions after clicking a suggestion
+        document.getElementById('searchSuggestions').innerHTML = '';
+    }
+
+    // Event listener for the search input to get suggestions as the user types
+    document.getElementById('searchInput').addEventListener('input', getSearchSuggestions);
+
+    // Event listener for suggestion click to paste the title in the search input and remove dropdown items
+    document.getElementById('searchSuggestions').addEventListener('click', (event) => {
+        if (event.target.matches('.dropdown-item')) {
+            handleSuggestionClick(event.target);
+        }
+    });
+
+    // Function to clear the suggestions
+    function clearSuggestions() {
+        document.getElementById('searchSuggestions').innerHTML = '';
+    }
+
+    // Event listener to clear the suggestions when the search input is manually cleared
+    document.getElementById('searchInput').addEventListener('blur', () => {
+        // Delay the clearing of suggestions to ensure the click on suggestion works
+        timeoutId = setTimeout(clearSuggestions, 200);
+    });
+
+    // Event listener to cancel the timeout if the search input gains focus again
+    document.getElementById('searchInput').addEventListener('focus', () => {
+        clearTimeout(timeoutId);
+    });
+</script>
+</body>
+</html>

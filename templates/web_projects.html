@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>{{ project.title }}</title>
+
+  <!-- Template Main CSS File -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  <style>
+    /* Custom CSS for background image in top header */
+    .position-relative {
+      background-image: url('https://images.unsplash.com/photo-1608243136637-48b0924bfc9f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8Mjh8fHxlbnwwfHx8fHw%3D&auto=format&fit=crop&w=900&q=60');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      min-height: 400px; /* Adjust the height as needed */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #fff;
+      padding: 2rem;
+    }
+
+    /* CSS animation for the h1 element */
+    .display-3 {
+      animation: fadeInAnimation 1s ease-in-out;
+      animation-fill-mode: both;
+    }
+
+    /* Keyframes for the fadeInAnimation */
+    @keyframes fadeInAnimation {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Custom CSS for code snippet */
+    pre code {
+      background-color: #1E1E1E;
+      color: #FFA500; /* Change the color to your desired one */
+      font-family: 'Courier New', monospace;
+      padding: 10px;
+      border-radius: 5px;
+      display: block;
+    }
+  </style>
+
+  <!-- CodeMirror and highlight.js CDNs -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.68.0/codemirror.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/atom-one-dark-reasonable.min.css">
+</head>
+
+<body>
+  <!-- top header -->
+  <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-body-tertiary">
+    <div class="col-md-6 p-lg-5 mx-auto my-5">
+      <h1 class="display-3 fw-bold">{{ project.title }}</h1>
+    </div>
+
+    <div class="product-device shadow-sm d-none d-md-block"></div>
+    <div class="product-device product-device-2 shadow-sm d-none d-md-block"></div>
+  </div>
+    <!-- Project info card -->
+<div style="display: flex; justify-content: center;">
+  <div class="card" style="width: 18rem;">
+   <div class="card-header bg-primary text-white">
+     <b>Project Info</b>
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item"><b>Date Published:</b> {{ project.date }}</li>
+      <li class="list-group-item"><b>Category:</b> {% if project.category == 'ml' %}Machine Learning{% elif project.category == 'web' %}Web Development{% else %}Game Development{% endif %}</li>
+     <li class="list-group-item"><b>Project Url:</b><br><a href="{{ project.project_url }}" target="_blank" >{{ project.project_url }}</a></li>
+    </ul>
+  </div>
+</div>
+  <hr>
+
+
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <!-- Convert CKEditor content to HTML and display it with code snippet theme -->
+        <div id="code-snippet-body">
+          {{ project.body | safe }}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% if is_logged_in %}
+<div class="container">
+  <div class="d-flex justify-content-center">
+    <a href="{{ url_for('edit_project', catg=project.category, proj_id=project.id) }}" class="btn btn-dark rounded-pill px-3 mx-2">Edit Project</a>
+    <a href="{{ url_for('delete_project', catg=project.category, proj_id=project.id) }}" class="btn btn-dark rounded-pill px-3 mx-2">Delete Project</a>
+  </div>
+</div>
+  {% endif %}
+  <!-- Template Main JS File -->
+  <script src="../static/assets/js/main.js"></script>
+
+  <!-- CKEditor and CodeSnippet scripts -->
+  <script src="../static/ckeditor/ckeditor.js"></script>
+  <script src="../static/highlight/es/highlight.min.js"></script>
+
+  <script>
+    // CKEditor initialization with codeSnippet plugin and theme
+    CKEDITOR.replace('editor', {
+      extraPlugins: 'codesnippet',
+      codeSnippet_theme: 'pojoaque'
+    });
+
+    // Initialize the code snippet highlighting
+    hljs.initHighlightingOnLoad();
+
+    // Highlight code snippets inside the 'code-snippet-body' div
+    document.addEventListener('DOMContentLoaded', function () {
+      const codeSnippetElements = document.querySelectorAll('code');
+      codeSnippetElements.forEach(function (element) {
+        hljs.highlightBlock(element);
+      });
+    });
+  </script>
+</body>
+
+</html>
