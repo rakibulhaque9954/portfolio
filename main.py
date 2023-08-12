@@ -93,7 +93,6 @@ def load_user(user_id):
 
 @app.route('/')
 def home():
-    print(username, pass_key)
     ml_results = MlProjects.query.all()
     web_results = WebProjects.query.all()
     game_results = GameProjects.query.all()
