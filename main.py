@@ -11,8 +11,9 @@ import os
 
 """loading environment variables"""
 # load_dotenv()
-username = "rahul@admin.com" #os.environ.get("USERNAME")
-pass_key = "Rahul@9954" #os.environ.get("PASS_KEY")
+username = os.environ.get('USERNAME')
+pass_key = os.environ.get('PASSWORD')
+
 
 """Initialising flask app"""
 app = Flask(__name__)
@@ -20,7 +21,7 @@ ckeditor = CKEditor(app)
 
 app.config['CKEDITOR_SERVE_LOCAL'] = True
 Bootstrap(app)
-app.config['SECRET_KEY'] = 'sdfsdfwefwefewf'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///projects_portfolios.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
