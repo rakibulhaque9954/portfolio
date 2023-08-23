@@ -16,7 +16,7 @@ python-dateutil==2.8.2
 requests==2.31.0
 sortedcontainers==2.4.0
 SQLAlchemy==2.0.19
-Werkzeug==2.3.6
+Werkzeug==2.2.3
 wheel==0.38.4
 wsproto==1.2.0
 WTForms==2.3.3
