@@ -7,12 +7,12 @@ from flask_bootstrap import Bootstrap
 from flask_ckeditor import CKEditor
 from forms import *
 import os
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
 """loading environment variables"""
-load_dotenv()
-username = os.environ.get("USERNAME")
-pass_key = os.environ.get("PASS_KEY")
+# load_dotenv()
+username = "rahul@admin.com" #os.environ.get("USERNAME")
+pass_key = "Rahul@9954" #os.environ.get("PASS_KEY")
 
 """Initialising flask app"""
 app = Flask(__name__)
@@ -327,7 +327,7 @@ def get_suggestions():
 
     return jsonify(results)
 
-
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)
+
 
