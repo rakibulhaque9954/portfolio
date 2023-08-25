@@ -17,7 +17,7 @@
 
         if (countdown <= 0) {
           clearInterval(countdownInterval);
-          window.location.href = "index.html"; // Replace with your home page URL
+          window.location.href = "{{ url_for('home') }}"; // Replace with your home page URL
         }
       }, 1000); // Update every 1 second
     }
