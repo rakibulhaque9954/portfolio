@@ -345,7 +345,7 @@ def email_notify():
         with smtplib.SMTP("smtp.gmail.com", port=587) as connection:
             connection.starttls()
             connection.login(user=email, password=app_password)
-            connection.sendmail(from_addr=email, to_addrs="hackingandtesting2@gmail.com",
+            connection.sendmail(from_addr=email, to_addrs=to_address,
                                 msg=f'Message from Portfolio\n\nName: {name}\nEmail: {email_address}\n'
                                     f'Subject: {subject}\nMessage: {message}')
         return render_template('sent_success.html')
