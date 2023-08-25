@@ -7,6 +7,7 @@ from flask_bootstrap import Bootstrap
 from flask_ckeditor import CKEditor
 from forms import *
 import os
+import smtplib
 # from dotenv import load_dotenv
 
 """loading environment variables"""
@@ -327,6 +328,28 @@ def get_suggestions():
             pass
 
     return jsonify(results)
+
+@app.route('/sent-inquiry', methods = ['POST'])
+def email_notify():
+        """Gets data and redirects data using SMPTPLIB Module to my Email"""
+        # the admin's email
+        email = os.environ.get('EMAIL')
+        app_password = os.environ.get('APP_PASSWORD')
+
+        to_address = os.environ.get('TO_ADDRESS')
+
+        name = request.form['name']
+        email_address = request.form['email']
+        subject = request.form['subject']
+        message = request.form['message']
+        with smtplib.SMTP("smtp.gmail.com", port=587) as connection:
+            connection.starttls()
+            connection.login(user=email, password=app_password)
+            connection.sendmail(from_addr=email, to_addrs="hackingandtesting2@gmail.com",
+                                msg=f'Message from Portfolio\n\nName: {name}\nEmail: {email_address}\n'
+                                    f'Subject: {subject}\nMessage: {message}')
+        return render_template('sent_success.html')
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

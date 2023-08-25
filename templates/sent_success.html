@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Inquiry-sent</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+<script>
+    // Function to redirect after a delay
+    function redirectToHomePage() {
+      var countdown = 5; // 5 seconds
+      var countdownElement = document.getElementById("countdown");
+
+      var countdownInterval = setInterval(function() {
+        countdown--;
+        countdownElement.innerHTML = countdown;
+
+        if (countdown <= 0) {
+          clearInterval(countdownInterval);
+          window.location.href = "index.html"; // Replace with your home page URL
+        }
+      }, 1000); // Update every 1 second
+    }
+
+    // Call the function when the page loads
+    window.onload = redirectToHomePage;
+  </script>'
+</head>
+<body>
+<div class="p-5 text-center bg-body-tertiary rounded-3">
+    <h1 class="text-body-emphasis">Sent!!!</h1>
+    <p class="lead">
+       <code>Thank you for reaching out, get back to you shortly</code>
+         <p>Redirecting in <span id="countdown">5</span> seconds...</p>
+    </p>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+</body>
+</html>
